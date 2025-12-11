@@ -2,7 +2,6 @@ package io.github.tempjr.demowebflux.web.controller;
 
 import io.github.tempjr.demowebflux.domain.service.TicketService;
 import io.github.tempjr.demowebflux.web.dto.request.CompraRequestDTO;
-import io.github.tempjr.demowebflux.web.dto.response.EventoResponseDTO;
 import io.github.tempjr.demowebflux.web.dto.response.IngressoResponseDTO;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,6 @@ public class TicketController {
         this.ticketService = ticketService;
         this.ticketSink = Sinks.many().multicast().onBackpressureBuffer();
     }
-
 
     @GetMapping
     public Flux<IngressoResponseDTO> getAllTickets() {

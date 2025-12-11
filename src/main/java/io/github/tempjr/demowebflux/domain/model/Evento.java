@@ -17,7 +17,6 @@ public class Evento {
     @Column("tipo")
     private TipoEvento tipoEvento;
     private String nome;
-    @Column("localDate")
     private LocalDate data;
     private String descricao;
 

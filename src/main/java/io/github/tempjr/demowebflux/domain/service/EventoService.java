@@ -55,4 +55,11 @@ public class EventoService {
         return eventoRepository.findByTipoEvento(tipo)
                 .map(EventoResponseDTO::toDTO);
     }
+
+
+    public Mono<String> getTranslate(Long id, String language) {
+        return eventoRepository.findById(id)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+                .flatMap(evento -> TextTranslateService.getTranslatedText(evento.getDescricao(), language));
+    }
 }

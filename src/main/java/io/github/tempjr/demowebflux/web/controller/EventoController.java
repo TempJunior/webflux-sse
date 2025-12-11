@@ -4,7 +4,10 @@ import io.github.tempjr.demowebflux.domain.service.EventoService;
 import io.github.tempjr.demowebflux.web.dto.request.EventoRequestDTO;
 import io.github.tempjr.demowebflux.web.dto.request.EventoUpdateRequestDTO;
 import io.github.tempjr.demowebflux.web.dto.response.EventoResponseDTO;
+import io.github.tempjr.demowebflux.web.dto.response.TranslateResponseDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,9 +38,10 @@ public class EventoController {
     }
 
     @PostMapping
-    public Mono<EventoResponseDTO> createEvento(@RequestBody EventoRequestDTO requestDTO){
-        return eventoService.createEvento(requestDTO)
+    public ResponseEntity<Mono<EventoResponseDTO>> createEvento(@RequestBody EventoRequestDTO requestDTO){
+        var evento = eventoService.createEvento(requestDTO)
                 .doOnSuccess(eventoSink::tryEmitNext);
+        return ResponseEntity.status(HttpStatus.CREATED).body(evento);
     }
 
     @DeleteMapping("/{id}")
@@ -55,4 +59,10 @@ public class EventoController {
         return Flux.merge(eventoService.getEventosByTipoEvento(tipoEvento), eventoSink.asFlux())
                 .delayElements(Duration.ofSeconds(4));
     }
+
+    @GetMapping("/{id}/translate/{language}")
+    public Mono<String> translateText(@PathVariable Long id, @PathVariable String language) {
+        return eventoService.getTranslate(id, language);
+    }
+
 }
